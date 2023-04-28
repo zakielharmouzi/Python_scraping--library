@@ -1,1 +1,1 @@
-table = driver.find_element(By.XPATH, '/html/body/table/tbody/tr[3]/td[1]/table/tbody/tr[4]')
+driver.find_element(By.XPATH, '//*[@id="id_icon_paging_prev"]').click()
