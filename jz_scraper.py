@@ -76,6 +76,7 @@ driver = webdriver.Chrome(ChromeDriverManager().install())
 B_titles = []
 B_Authors = []
 B_Isbn = []
+B_paper_type = []
 Temp = []
 for z in range(len(LINKS)):
     try:
@@ -114,8 +115,26 @@ for z in range(len(LINKS)):
     except:
         print('Failed to retrieve info')
 
+for i in range(len(B_titles)):
+    B_titles[i] = B_titles[i].replace('Title', '')
+    # remove the space at the beginning of the string
+    B_titles[i] = B_titles[i][1:]
+    # remove the space at the end of the string
+    B_titles[i] = B_titles[i][:-1]
+    # remove the / and everything after it
+    B_titles[i] = B_titles[i].split('/')[0]
+    print(B_titles[i])
+num_isbn = []
+for i in range(len(B_Isbn)):
+    split_isbn = B_Isbn[i].split('(')
+    num_isbn.append(split_isbn[0])
+    temp = split_isbn[1].split(')')
+    B_paper_type.append(temp[0])
+    # print(num_isbn[i])
+    # print(B_paper_type[i])
+
 excel_file = 'BookData.xlsx'
 for i in range(len(B_titles)):
-    Temp.append([B_titles[i], B_Authors[i], B_Isbn[i]])
-    df = pd.DataFrame(Temp, columns = ['Title', 'Author', 'ISBN'])
+    Temp.append([B_titles[i], B_Authors[i], num_isbn[i],B_paper_type[i], 'Biology'])
+    df = pd.DataFrame(Temp, columns = ['Title', 'Author', 'ISBN', 'Paper Type', 'Category'])
     df.to_excel(excel_file)
