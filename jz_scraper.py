@@ -33,14 +33,14 @@ try:
     num = int(num)
     # FIX: go through all the pages until you encounter the Next word and then assign num to the number of pages
     print(num)
-    for j in range(1, 2):
+    for j in range(1, num):
         try:
             if(j != 1):
                 driver.find_element(By.XPATH, '//*[@id="id_icon_paging_prev"]').click()
         except:
             break
         # add 53 here instead of 11
-        for i in range(4, 11):
+        for i in range(4, 53):
             try:
                 element = driver.find_element(By.XPATH, '/html/body/table/tbody/tr[3]/td[1]/table/tbody/tr['+str(i)+']')
             except:
@@ -77,7 +77,6 @@ driver = webdriver.Chrome(ChromeDriverManager().install())
 B_titles = []
 B_Authors = []
 B_Isbn = []
-Full_Description = []
 Temp = []
 for z in range(len(LINKS)):
     try:
