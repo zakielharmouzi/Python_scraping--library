@@ -9,6 +9,7 @@ from parsel import Selector
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.keys import Keys
+# remove the following line if you already have the chromedriver installed
 
 LINKS = []
 try:
