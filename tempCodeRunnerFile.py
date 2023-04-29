@@ -1,1 +1,1 @@
-driver.find_element(By.XPATH, '//*[@id="id_icon_paging_prev"]').click()
+Isbn
