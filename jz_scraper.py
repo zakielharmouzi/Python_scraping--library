@@ -4,13 +4,12 @@ import time
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.options import Options
 import time
-import json
-import re
 import pandas as pd
 from parsel import Selector 
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.keys import Keys
+
 LINKS = []
 try:
     driver = webdriver.Chrome(ChromeDriverManager().install())
