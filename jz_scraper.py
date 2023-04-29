@@ -25,7 +25,6 @@ try:
     element = driver.find_element(By.XPATH, '//*[@id="m"]/option[3]').click()
     time.sleep(5)
     element = driver.find_element(By.XPATH, '//*[@id="search"]/table/tbody/tr/td[2]/font/a').click()
-    # element.send_keys(Keys.ENTER)
     time.sleep(5)
     table = driver.find_element(By.XPATH, '/html/body/table/tbody/tr[3]/td[1]/table/tbody/tr[4]')
     count = 0  
@@ -114,10 +113,9 @@ for z in range(len(LINKS)):
                     break
     except:
         print('Failed to retrieve info')
-# use pandas to open an excel file and write the data to it
+
 excel_file = 'BookData.xlsx'
 for i in range(len(B_titles)):
-
     Temp.append([B_titles[i], B_Authors[i], B_Isbn[i]])
     df = pd.DataFrame(Temp, columns = ['Title', 'Author', 'ISBN'])
     df.to_excel(excel_file)
