@@ -9,6 +9,7 @@ from parsel import Selector
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.keys import Keys
+import re
 # remove the following line if you already have the chromedriver installed
 
 LINKS = []
@@ -19,7 +20,7 @@ try:
     page_content = driver.page_source
     response = Selector(text=driver.page_source)
     time.sleep(5)
-    key = 'biology'
+    key = 'Mathematics'
     element = driver.find_element(By.XPATH, '//*[@id="st1"]')
     element.send_keys(key)
     element = driver.find_element(By.XPATH, '//*[@id="m"]/option[3]').click()
@@ -32,7 +33,8 @@ try:
     num = int(num)
     # FIX: go through all the pages until you encounter the Next word and then assign num to the number of pages
     print(num)
-    for j in range(1, num):
+    # adjust the range here to include all the pages(replace 3 with num)
+    for j in range(1, 3):
         try:
             if(j != 1):
                 driver.find_element(By.XPATH, '//*[@id="id_icon_paging_prev"]').click()
@@ -76,23 +78,28 @@ driver = webdriver.Chrome(ChromeDriverManager().install())
 B_titles = []
 B_Authors = []
 B_Isbn = []
+B_paper_type = []
 Temp = []
+publication_info = []
 for z in range(len(LINKS)):
     try:
         driver.get(LINKS[z])
         page_content = driver.page_source
         response = Selector(text=driver.page_source)
-        time.sleep(2)
+        time.sleep(0.5)
         for i in range(1,4):
             try:
                 element = driver.find_element(By.XPATH, '//*[@id="infoTable"]/table[1]/tbody/tr/td/table/tbody/tr['+str(i)+']').get_attribute("innerText")
                 if(element.find('Title') != -1):
                     B_titles.append(element)
                     print(element)
+                if(element.find('Publication') != -1):
+                    publication_info.append(element)
+                    print(element)
             except:
                 break
         element = driver.find_element(By.ID, 'bibFullRecord').click()
-        time.sleep(1)
+        time.sleep(0.5)
         for i in range(1,3):
             for j in range(1,11):
                 try:
@@ -114,8 +121,33 @@ for z in range(len(LINKS)):
     except:
         print('Failed to retrieve info')
 
+for i in range(len(B_titles)):
+    B_titles[i] = B_titles[i].replace('Title', '')
+    # remove the space at the beginning of the string
+    B_titles[i] = B_titles[i][1:]
+    # remove the space at the end of the string
+    B_titles[i] = B_titles[i][:-1]
+    # remove the / and everything after it
+    B_titles[i] = B_titles[i].split('/')[0]
+    print(B_titles[i])
+num_isbn = []
+temp1 = []
+for i in range(len(B_Isbn)):
+    try:
+        publication_info[i] = publication_info[i].replace('Publication Info.', '')
+        B_Isbn[i] = B_Isbn[i].replace('ISBN', '')
+        B_Isbn[i] = B_Isbn[i][1:]
+        B_Isbn[i] = B_Isbn[i][:-1]
+        temp1 = B_Isbn[i].split(' ')
+        num_isbn.append(temp1[0])
+    except:
+        print('Failed to remove ISBN')
+
 excel_file = 'BookData.xlsx'
 for i in range(len(B_titles)):
-    Temp.append([B_titles[i], B_Authors[i], B_Isbn[i]])
-    df = pd.DataFrame(Temp, columns = ['Title', 'Author', 'ISBN'])
-    df.to_excel(excel_file)
+    try:
+        Temp.append([B_titles[i], B_Authors[i],num_isbn[i],'Mathematics',publication_info[i],'Available'])
+        df = pd.DataFrame(Temp, columns = ['Title', 'Author', 'ISBN', 'Category','Publication_info','status'])
+        df.to_excel(excel_file)
+    except:
+        print('Failed to add to excel file')
